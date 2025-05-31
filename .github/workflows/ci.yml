@@ -1,0 +1,17 @@
+name: Java CI
+
+on:
+  push:
+    branches: [ main, feature/* refactor/* ]
+  pull_request:
+    branches: [ main, feature/* refactor/* ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/workflows/setup-gradle
+      - name: Build and test with Gradle
+        run: ./gradlew test
