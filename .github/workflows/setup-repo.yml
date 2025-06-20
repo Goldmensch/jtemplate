@@ -65,16 +65,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: jbang
-        uses: jbangdev/jbang-action@v0.126.3
         with:
-          script: ./.github/workflows/setup-repo/ReplacePlaceholder.java
+          token: '${{ secrets.GITHUB_TOKEN }}'
+      - name: jbang
+        uses: jbangdev/setup-jbang@main
+      - name: run script
+        run: jbang ./.github/workflows/setup-repo/ReplacePlaceholder.java
         env:
           PROJECT_NAME: ${{ inputs.project_name }}
           PROJECT_DESC: ${{ inputs.project_description }}
           JAVA_VERSION: ${{ inputs.java_version }}
           AUTHOR_NAME: ${{ inputs.author_name }}
           LICENSE_NAME: ${{ inputs.license }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          REPO_URL: github.com/${{ github.repository }}
+          REPO_NAME: ${{ github.repository }}
       - name: Commit files
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -86,7 +91,15 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
-  gh-pages:
+
+  create-gh-pages:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          git switch --orphan gh-pages
+          git commit --allow-empty -m "Prepare"
+          git push -u origin gh-pages

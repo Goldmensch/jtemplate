@@ -115,7 +115,10 @@ Map<String, String> loadReplacementsFromEnv() {
             a("JAVA_VERSION"),
             a("LICENSE_NAME"),
             a("AUTHOR_NAME"),
-            a("REPO_URL")
+            a("REPO_URL"),
+            a("REPO_OWNER"),
+            a("REPO_NAME"),
+            Map.entry("REPO_WO_OWNER_NAME", a("REPO_NAME").getValue().split("/")[1])
     );
 }
 

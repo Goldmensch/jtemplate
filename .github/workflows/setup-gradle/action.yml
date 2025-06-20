@@ -5,10 +5,11 @@ runs:
   steps:
     - name: Read java version
       id: version
+      shell: bash
       run: |
         content=$(cat "gradle.properties")
-        regex = "java\.version *= * (.*)"
-        if [[ $msg =~ $regex ]]
+        regex="java\.version *= * (.*)"
+        if [[ $content =~ $regex ]]
         then 
           echo "java=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
         fi

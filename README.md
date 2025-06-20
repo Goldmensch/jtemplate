@@ -15,6 +15,9 @@ to prepare the repository.
 
 After a successful run, this readme will be replaced.
 
+Then set the gh-pages setting to "from branch" and choose "gh-pages".
+
+
 ## VARIABLES
 This template has several variables, that will be replaced by the setup-repo task.
 
@@ -31,5 +34,7 @@ This template has several variables, that will be replaced by the setup-repo tas
 
 - AUTHOR_NAME -> the authors name (only one author)
 
-
+- REPO_OWNER -> the repos owner
+- REPO_NAME -> the repos name with the author, eg. Goldmensch/fluava
+- REPO_WO_OWNER_NAME -> the repos name without the owner
 - REPO_URL -> the url to the online code repository, without https://, eg. github.com/godmensch/jtemplate
