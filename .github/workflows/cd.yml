@@ -130,9 +130,9 @@ jobs:
             TBD
             
             ## :page_facing_up: Docs
-            You can find the wiki for this version [here](https://kaktushose.github.io/proteus/${{ needs.check_if_release.outputs.version }}/).
+            You can find the wiki for this version [here](https://REPO_OWNER.github.io/REPO_WO_OWNER_NAME/${{ needs.check_if_release.outputs.version }}/).
             
-            To visit this version's javadocs click [here](https://kaktushose.github.io/proteus/javadocs/${{ needs.check_if_release.outputs.version_major }}/).
+            To visit this version's javadocs click [here](https://REPO_OWNER.github.io/REPO_WO_OWNER_NAME/javadocs/${{ needs.check_if_release.outputs.version_major }}/).
             
             ## :package: Download / Usage
             ### Gradle
@@ -142,15 +142,15 @@ jobs:
             }
             
             dependencies {
-              implementation("io.github.kaktushose:proteus:${{ needs.check_if_release.outputs.version }}")
+              implementation("MVN_GROUP:MVN_ARTIFACT:${{ needs.check_if_release.outputs.version }}")
             }
             ```
             
             ### Maven
             ```xml
             <dependency>
-              <groupId>io.github.kaktushose</groupId>
-              <artifactId>proteus</artifactId>
+              <groupId>MVN_GROUP</groupId>
+              <artifactId>MVN_ARTIFACT</artifactId>
               <version>${{ needs.check_if_release.outputs.version }}</version>
             </dependency>
             ```

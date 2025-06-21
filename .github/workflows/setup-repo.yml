@@ -4,7 +4,7 @@ on:
     inputs:
       project_name:
         description: the project's name, used in gradle
-        required: true
+        required: false
         type: string
       project_description:
         description: the project's description
@@ -17,7 +17,15 @@ on:
       author_name:
         description: the author's name
         type: string
+        required: false
+      mvn_group:
+        description: The maven group id to use for publishing
+        type: string
         required: true
+      mvn_artifact:
+        description: The maven artifact name to use for publishing
+        type: string
+        required: false
       license:
         description: the project's license
         type: choice
@@ -80,6 +88,8 @@ jobs:
           REPO_OWNER: ${{ github.repository_owner }}
           REPO_URL: github.com/${{ github.repository }}
           REPO_NAME: ${{ github.repository }}
+          MVN_GROUP: ${{ inputs.mvn_group }}
+          MVN_ARTIFACT: ${{ inputs.mvn_artifact }}
       - name: Commit files
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"

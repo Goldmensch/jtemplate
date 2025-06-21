@@ -34,6 +34,9 @@ This template has several variables, that will be replaced by the setup-repo tas
 
 - AUTHOR_NAME -> the authors name (only one author)
 
+- MVN_GROUP -> the projects maven group, used for publishing
+- MVN_ARTIFACT -> the projects maven artifact, used for publishing
+
 - REPO_OWNER -> the repos owner
 - REPO_NAME -> the repos name with the author, eg. Goldmensch/fluava
 - REPO_WO_OWNER_NAME -> the repos name without the owner

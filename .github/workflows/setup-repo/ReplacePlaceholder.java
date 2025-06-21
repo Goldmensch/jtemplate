@@ -110,22 +110,29 @@ String replaceContent(String content) {
 
 Map<String, String> loadReplacementsFromEnv() {
     return Map.ofEntries(
-            a("PROJECT_NAME"),
+            aOpt("PROJECT_NAME", a("REPO_NAME").getValue()),
             a("PROJECT_DESC"),
             a("JAVA_VERSION"),
             a("LICENSE_NAME"),
-            a("AUTHOR_NAME"),
+            aOpt("AUTHOR_NAME", a("REPO_OWNER").getValue()),
             a("REPO_URL"),
             a("REPO_OWNER"),
             a("REPO_NAME"),
+            a("MVN_GROUP"),
+            aOpt("MVN_ARTIFACT", a("PROJECT_NAME").getValue().toLowerCase()),
             Map.entry("REPO_WO_OWNER_NAME", a("REPO_NAME").getValue().split("/")[1])
     );
 }
 
+Map.Entry<String, String> aOpt(String key, String fallback) {
+    Map.Entry<String, String> loaded = a(key);
+    if (loaded.getValue().equals(key)) return Map.entry(key, fallback);
+    return loaded;
+}
 
 Map.Entry<String, String> a(String key) {
     String env = System.getenv(key);
-    return Map.entry(key, Objects.nonNull(env) ? env : key);
+    return Map.entry(key, env != null && env.isBlank() ? env : key);
 }
 
 HttpClient client = HttpClient.newHttpClient();
