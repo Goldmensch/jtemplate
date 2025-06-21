@@ -1,4 +1,4 @@
-name: Wiki Deployment
+name: Snapshot Wiki Deployment
 on:
   push:
     branches:

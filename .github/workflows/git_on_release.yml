@@ -1,4 +1,4 @@
-name: Git action on release (tip and tails)
+name: Create tail branch
 
 on:
   push:
@@ -29,6 +29,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      # info: needs one non-major bump release in git history
       - id: previous_release
         run: |
           msg=$(git log --pretty=format:"%s" --grep="^Release" --skip 1 -n 1)

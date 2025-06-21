@@ -89,6 +89,7 @@ jobs:
           git config --global user.email 41898282+github-actions[bot]@users.noreply.github.com
           git config --global user.name github-actions[bot]
           
+          cd wiki
           mike deploy -u ${{ needs.check_if_release.outputs.version }} wiki
           mike set-default ${{ needs.check_if_release.outputs.version }}
       - name: Deploy Wiki
