@@ -136,7 +136,7 @@ Map.Entry<String, String> aOpt(String key, String fallback) {
 
 Map.Entry<String, String> a(String key) {
     String env = System.getenv(key);
-    return Map.entry(key, env != null && env.isBlank() ? env : key);
+    return Map.entry(key, env != null && !env.isBlank() ? env : key);
 }
 
 HttpClient client = HttpClient.newHttpClient();
