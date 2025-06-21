@@ -1,3 +1,3 @@
-# PROJECT_NAME
+# jtemplate
 
-PROJECT_DESC
+super amazon i18n lib

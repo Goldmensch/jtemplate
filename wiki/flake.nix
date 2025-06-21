@@ -20,7 +20,7 @@
         ...
       }: {
          devShells.default = pkgs.mkShell {
-           name = "PROJECT_NAME";
+           name = "jtemplate";
            packages = with pkgs; [git mkdocs python312Packages.mkdocs-material ];
          };
        };
