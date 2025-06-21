@@ -125,7 +125,7 @@ Map<String, String> loadReplacementsFromEnv() {
 }
 
 Map.Entry<String, String> repoWoOwnerName() {
-    return Map.entry("REPO_WO_OWNER_NAME", a("REPO_NAME").getValue().split("/")[1])
+    return Map.entry("REPO_WO_OWNER_NAME", a("REPO_NAME").getValue().split("/")[1]);
 }
 
 Map.Entry<String, String> projectName() {
