@@ -21,7 +21,7 @@ publishing {
             pom {
                 name.set(rootProject.name)
                 description.set(project.description)
-                url.set("PROJECT_URL")
+                url.set("REPO_URL")
 
                 licenses {
                     license {

@@ -120,12 +120,16 @@ Map<String, String> loadReplacementsFromEnv() {
             a("REPO_NAME"),
             a("MVN_GROUP"),
             aOpt("MVN_ARTIFACT", projectName().getValue().toLowerCase()),
-            Map.entry("REPO_WO_OWNER_NAME", a("REPO_NAME").getValue().split("/")[1])
+            repoWoOwnerName()
     );
 }
 
+Map.Entry<String, String> repoWoOwnerName() {
+    return Map.entry("REPO_WO_OWNER_NAME", a("REPO_NAME").getValue().split("/")[1])
+}
+
 Map.Entry<String, String> projectName() {
-    return aOpt("PROJECT_NAME", a("REPO_NAME").getValue());
+    return aOpt("PROJECT_NAME", repoWoOwnerName().getValue());
 }
 
 Map.Entry<String, String> aOpt(String key, String fallback) {
