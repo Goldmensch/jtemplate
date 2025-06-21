@@ -20,7 +20,7 @@
         ...
       }: {
          devShells.default = pkgs.mkShell {
-           name = "PROJECT_NAME";
+           name = "Fluava";
            packages = with pkgs; [git mkdocs python312Packages.mkdocs-material ];
          };
        };

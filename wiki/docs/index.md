@@ -1,3 +1,3 @@
-# PROJECT_NAME
+# Fluava
 
-PROJECT_DESC
+i18n lib

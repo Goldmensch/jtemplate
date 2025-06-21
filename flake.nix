@@ -34,7 +34,7 @@
         };
        in {
          devShells.default = pkgs.mkShell {
-           name = "PROJECT_NAME";
+           name = "Fluava";
            packages = with pkgs; [git gradle maven] ++ jdks;
            JDK24 = jdk;
          };
