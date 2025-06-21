@@ -2,9 +2,7 @@ name: Java CI
 
 on:
   push:
-    branches: [ main, feature/*, refactor/* fix/* ]
   pull_request:
-    branches: [ main, feature/*, refactor/* fix/* ]
 
 jobs:
   build:
