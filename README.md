@@ -23,7 +23,7 @@ This template has several variables, that will be replaced by the setup-repo tas
 
 - PROJECT_NAME -> the project's name
 - PROJECT_DESC -> the project's main modules (lib) description
-
+- PROJECT_LOWER_NAME -> the project's name but in lower case, for use in java code
 
 - JAVA_VERSION -> the project java version to use
 

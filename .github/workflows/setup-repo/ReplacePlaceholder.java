@@ -111,6 +111,7 @@ String replaceContent(String content) {
 Map<String, String> loadReplacementsFromEnv() {
     return Map.ofEntries(
             projectName(),
+            Map.entry("PROJECT_LOWER_NAME", projectName().getValue().toLowerCase()),
             a("PROJECT_DESC"),
             a("JAVA_VERSION"),
             a("LICENSE_NAME"),
