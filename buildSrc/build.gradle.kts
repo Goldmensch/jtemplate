@@ -2,7 +2,7 @@ plugins {
     `kotlin-dsl`
 }
 
-description = "PROJECT_DESC"
+description = "cool 18n lib"
 
 repositories {
     mavenCentral()

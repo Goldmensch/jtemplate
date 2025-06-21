@@ -1,6 +1,6 @@
 plugins {
     // Apply the java-library plugin for API and implementation separation.
-    id("PROJECT_NAME.convention.java")
+    id("Goldmensch/jtemplate.convention.java")
 }
 
-description = "PROJECT_DESC"
+description = "cool 18n lib"

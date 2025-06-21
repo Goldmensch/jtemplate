@@ -1,3 +1,3 @@
-# PROJECT_NAME
+# Goldmensch/jtemplate
 
-PROJECT_DESC
+cool 18n lib
