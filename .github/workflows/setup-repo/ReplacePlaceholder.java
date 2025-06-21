@@ -110,7 +110,7 @@ String replaceContent(String content) {
 
 Map<String, String> loadReplacementsFromEnv() {
     return Map.ofEntries(
-            aOpt("PROJECT_NAME", a("REPO_NAME").getValue()),
+            projectName(),
             a("PROJECT_DESC"),
             a("JAVA_VERSION"),
             a("LICENSE_NAME"),
@@ -119,9 +119,13 @@ Map<String, String> loadReplacementsFromEnv() {
             a("REPO_OWNER"),
             a("REPO_NAME"),
             a("MVN_GROUP"),
-            aOpt("MVN_ARTIFACT", a("PROJECT_NAME").getValue().toLowerCase()),
+            aOpt("MVN_ARTIFACT", projectName().getValue().toLowerCase()),
             Map.entry("REPO_WO_OWNER_NAME", a("REPO_NAME").getValue().split("/")[1])
     );
+}
+
+Map.Entry<String, String> projectName() {
+    return aOpt("PROJECT_NAME", a("REPO_NAME").getValue());
 }
 
 Map.Entry<String, String> aOpt(String key, String fallback) {
