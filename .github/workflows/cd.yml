@@ -62,7 +62,7 @@ jobs:
         if: ${{ steps.target_dir.outputs.name != 'ignore' }}
         run: |
           ./gradlew javadoc
-      - name: Deploy proteus docs
+      - name: Deploy docs
         if: ${{ steps.target_dir.outputs.name != 'ignore' }}
         uses: JamesIves/github-pages-deploy-action@v4
         with:
