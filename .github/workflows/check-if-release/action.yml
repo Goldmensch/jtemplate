@@ -14,7 +14,6 @@ outputs:
     value: ${{ steps.check.outputs.version_major }}
   title:
     value: ${{ steps.check.outputs.title }}
-git
 runs:
   using: "composite"
   steps:
