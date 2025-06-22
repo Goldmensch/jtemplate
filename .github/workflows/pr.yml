@@ -1,6 +1,6 @@
 name: pr.yml
 on:
-  pull_request:
+  pull_request_target:
 
 jobs:
   label:
