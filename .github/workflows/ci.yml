@@ -7,7 +7,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.repository != 'Goldmensch/jtemplate' && github.ref_name != 'master'}}
+    if: ${{ !(github.repository == 'Goldmensch/jtemplate' && github.ref_name == 'master')}}
 
     steps:
       - uses: actions/checkout@v4
