@@ -2,7 +2,7 @@ plugins {
     `kotlin-dsl`
 }
 
-description = "PROJECT_DESC"
+description = "sdfg"
 
 repositories {
     mavenCentral()
