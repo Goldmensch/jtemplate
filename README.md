@@ -11,6 +11,11 @@ This template contains:
 - implementation of tip and tails release model (jdk)
   - tail branch creation on major bump
 
+## GitHub Bots/Apps to use for best experience
+For the best experience, this template is built with some discord bots in mind to help automatic configuration.
+Please install following bots, before running the setup action:
+- [Settings](https://github.com/apps/settings)
+
 ## First steps
 You first have to run the workflow "setup repository" manually, you can do that in the
 actions tab of the GitHub page. This workflow requires several inputs, which will then be used
