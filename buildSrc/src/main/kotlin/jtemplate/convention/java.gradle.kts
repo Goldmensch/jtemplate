@@ -1,4 +1,4 @@
-package PROJECT_LOWER_NAME.convention
+package jtemplate.convention
 
 import gradle.kotlin.dsl.accessors._729aa7c1588b83738f7ec34c0a320432.java
 import gradle.kotlin.dsl.accessors._729aa7c1588b83738f7ec34c0a320432.testing
