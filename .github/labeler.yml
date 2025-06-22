@@ -7,3 +7,7 @@ Source:
 CI:
   - changed-files:
       - any-glob-to-any-file: ".github/workflows/**"
+feature:
+  - head-branch: "^feature"
+fix:
+  - head-branch: "^fix"

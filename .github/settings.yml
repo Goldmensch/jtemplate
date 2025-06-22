@@ -13,3 +13,10 @@ labels:
   - name: CI
     description: Indicated that files in ./github/workflows are changed.
     color: 2c41f9
+  - name: feature
+    description: This is a new feature.
+    color: c619a7
+  - name: fix
+    description: This is a bug/typo fix.
+    color: f6f931
+
