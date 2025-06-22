@@ -38,7 +38,9 @@ void main() throws IOException, InterruptedException {
                 @Override
                 public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
                     Path newPath = replacePath(path);
-                    if (path.toAbsolutePath().startsWith(root.resolve(".github"))) return FileVisitResult.CONTINUE;
+                    if (path.toAbsolutePath().startsWith(root.resolve(".github")) || path.getFileName().equals(Path.of("README.md"))) {
+                        return FileVisitResult.CONTINUE;
+                    }
 
                     Files.createDirectories(newPath.getParent());
 
@@ -67,6 +69,8 @@ void main() throws IOException, InterruptedException {
                 }
             });
 
+
+    Files.move(root.resolve("README.md"), Path.of("SETUP.md"));
     copyDefault("README.md", Path.of("."));
     createLicenseFile();
 
