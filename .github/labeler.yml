@@ -8,6 +8,8 @@ CI:
   - changed-files:
       - any-glob-to-any-file: ".github/workflows/**"
 feature:
-  - head-branch: "^feature"
+  - head-branch: "feature"
 fix:
-  - head-branch: "^fix"
+  - head-branch: "fix"
+other:
+  - head-branch: "^(?!feature|fix).*$"
