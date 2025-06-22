@@ -38,7 +38,9 @@ void main() throws IOException, InterruptedException {
                 @Override
                 public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
                     Path newPath = replacePath(path);
-                    if (path.toAbsolutePath().startsWith(root.resolve(".github"))) return FileVisitResult.CONTINUE;
+                    if (path.toAbsolutePath().startsWith(root.resolve(".github")) || path.getFileName().equals(Path.of("README.md"))) {
+                        return FileVisitResult.CONTINUE;
+                    }
 
                     Files.createDirectories(newPath.getParent());
 
@@ -67,6 +69,8 @@ void main() throws IOException, InterruptedException {
                 }
             });
 
+
+    Files.move(root.resolve("README.md"), Path.of("SETUP.md"));
     copyDefault("README.md", Path.of("."));
     createLicenseFile();
 
@@ -111,6 +115,7 @@ String replaceContent(String content) {
 Map<String, String> loadReplacementsFromEnv() {
     return Map.ofEntries(
             projectName(),
+            Map.entry("PROJECT_LOWER_NAME", projectName().getValue().toLowerCase()),
             a("PROJECT_DESC"),
             a("JAVA_VERSION"),
             a("LICENSE_NAME"),
@@ -120,12 +125,16 @@ Map<String, String> loadReplacementsFromEnv() {
             a("REPO_NAME"),
             a("MVN_GROUP"),
             aOpt("MVN_ARTIFACT", projectName().getValue().toLowerCase()),
-            Map.entry("REPO_WO_OWNER_NAME", a("REPO_NAME").getValue().split("/")[1])
+            repoWoOwnerName()
     );
 }
 
+Map.Entry<String, String> repoWoOwnerName() {
+    return Map.entry("REPO_WO_OWNER_NAME", a("REPO_NAME").getValue().split("/")[1]);
+}
+
 Map.Entry<String, String> projectName() {
-    return aOpt("PROJECT_NAME", a("REPO_NAME").getValue());
+    return aOpt("PROJECT_NAME", repoWoOwnerName().getValue());
 }
 
 Map.Entry<String, String> aOpt(String key, String fallback) {

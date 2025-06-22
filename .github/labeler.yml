@@ -1,0 +1,9 @@
+Wiki:
+  - changed-files:
+    - any-glob-to-any-file: "wiki/**"
+Source:
+  - changed-files:
+      - any-glob-to-any-file: "**/src/**"
+CI:
+  - changed-files:
+      - any-glob-to-any-file: ".github/workflows/**"
