@@ -3,4 +3,4 @@ plugins {
     id("jtemplate.convention.java")
 }
 
-description = "super amazon i18n lib"
+description = "sdfg"

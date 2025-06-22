@@ -2,7 +2,7 @@ plugins {
     `kotlin-dsl`
 }
 
-description = "super amazon i18n lib"
+description = "sdfg"
 
 repositories {
     mavenCentral()

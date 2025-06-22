@@ -21,12 +21,12 @@ publishing {
             pom {
                 name.set(rootProject.name)
                 description.set(project.description)
-                url.set("github.com/Goldmensch/jtemplate")
+                url.set("https://github.com/Goldmensch/jtemplate")
 
                 licenses {
                     license {
-                        name.set("MIT")
-                        url.set("http://choosealicense.com/licenses/mit/")
+                        name.set("GPL-2.0")
+                        url.set("http://choosealicense.com/licenses/gpl-2.0/")
                     }
                 }
 
