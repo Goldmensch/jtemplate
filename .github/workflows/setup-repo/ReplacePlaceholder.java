@@ -11,12 +11,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
-//COMPILE_OPTIONS --enable-preview --release 24
-//RUNTIME_OPTIONS --enable-preview
-
-//JAVA 24
+//JAVA 25
 
 //DEPS org.json:json:20250517
 
@@ -38,7 +34,7 @@ void main() throws IOException, InterruptedException {
                 @Override
                 public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
                     Path newPath = replacePath(path);
-                    if (path.toAbsolutePath().startsWith(root.resolve(".github")) || path.getFileName().equals(Path.of("README.md"))) {
+                    if (path.getFileName().equals(Path.of("README.md"))) {
                         return FileVisitResult.CONTINUE;
                     }
 
@@ -95,7 +91,7 @@ void copyDefault(String name, Path pathFromRoot) throws IOException {
 
     Path path = root.resolve(pathFromRoot).resolve(name);
     Files.deleteIfExists(path);
-    Files.writeString(path, replaceContent(s), StandardOpenOption.CREATE);
+    Files.writeString(path, s, StandardOpenOption.CREATE);
 }
 
 Path replacePath(Path path) {
