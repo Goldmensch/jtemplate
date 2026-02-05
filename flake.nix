@@ -19,7 +19,7 @@
         system,
         ...
       }: let
-        javaVersion = 24;
+        javaVersion = JAVA_VERSION;
 
         jdk = pkgs."temurin-bin-${toString javaVersion}";
         jdks = [
