@@ -65,6 +65,10 @@ Each commit will be automatically build and deployed to GitHub pages under the `
 
 If a release is triggered, the wiki is deployed under the respective version.
 
+The string `MVN_ARTIFACT_JAVADOC_VERSION` (`MVN_ARTIFACT` is a [variable](#variables) replaced during [setup](#first-steps))
+in your wiki is always replaced with the latest Javadoc version published. (the Javadoc version of the same deployment run).
+
+
 ### Javadoc
 Per default the javadoc of the `lib` module will be published to `gh-pages`.
 If you want to publish more, you have to adjust the logic in `.github/workflows/cd.yml` in the `javadoc` job,

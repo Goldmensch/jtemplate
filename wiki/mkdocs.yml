@@ -75,4 +75,4 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Javadocs: https://REPO_OWNER.github.io/REPO_WO_OWNER_NAME/javadocs/0/
+  - Javadocs: https://REPO_OWNER.github.io/REPO_WO_OWNER_NAME/javadocs/MVN_ARTIFACT_JAVADOC_VERSION/

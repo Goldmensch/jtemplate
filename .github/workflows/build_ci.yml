@@ -1,11 +1,11 @@
-name: Java CI
+name: Source build & test
 
 on:
   push:
   pull_request:
 
 jobs:
-  build:
+  build-java:
     runs-on: ubuntu-latest
     if: ${{ !(github.repository == 'Goldmensch/jtemplate' && github.ref_name == 'master')}}
 

@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - "[0-9]+.[0-9]+.x"
+      - "hotfix/[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
   check_if_release:
@@ -13,6 +14,7 @@ jobs:
       release: ${{ steps.check.outputs.release }}
       version: ${{ steps.check.outputs.version }}
       version_major: ${{ steps.check.outputs.version_major }}
+      version_minor: ${{ steps.check.outputs.version_minor }}
       title: ${{ steps.check.outputs.title }}
     steps:
       - uses: actions/checkout@v4
@@ -22,26 +24,43 @@ jobs:
         id: rules_check
         run: |
           branch=${{ github.ref_name }}
-          regex="([0-9]+)\.([0-9]+)\.x"
-          
-          if [[ $branch =~ $regex ]]
+          regex="(hotfix\/)?([0-9]+)\.([0-9]+)\.(x|[0-9]+)"
+
+          if [[ "${{ steps.check.outputs.release }}" = "true" && $branch =~ $regex ]]
           then
-            if [[ ${BASH_REMATCH[1]} == "${{ steps.check.outputs.version_major }}" && ${BASH_REMATCH[2]} == "${{ steps.check.outputs.version_minor }}" ]]
+            if [[ ${BASH_REMATCH[2]} != "${{ steps.check.outputs.version_major }}" || ${BASH_REMATCH[3]} != "${{ steps.check.outputs.version_minor }}" ]]
             then
-                echo fine
-            else
-                echo "cant change major nor minor version in tail branch"
+                echo "cant change major nor minor version in tail or hotfix branch"
                 exit 1
             fi
-          elif [[ $branch != "main" ]]
+          
+            if [[ -n "${BASH_REMATCH[1]}" ]]
+            then
+              if [[ ${BASH_REMATCH[4]} = "x" ]]
+              then
+                echo "hotfix branch needs full version in branch name, 'x' is not supported as patch version!"
+                exit 1
+              fi
+          
+              if [[ ${BASH_REMATCH[4]} != "${{ steps.check.outputs.version_patch }}" ]]
+              then
+                echo "patch version of release doesn't match version in branch name"
+                exit 1
+              fi
+            fi
+          
+            echo "fine"
+          elif [[ $branch != "main" && "${{ steps.check.outputs.release }}" = "true" ]]
           then
-            echo "should be only executed on main or tail branch"
+            echo "should be only executed on main, tail or hotfix branch"
             exit 1
           fi
 
-  javadoc:
+  javadoc_target_dir:
     runs-on: ubuntu-latest
     needs: check_if_release
+    outputs:
+      target: ${{ steps.target_dir.outputs.name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -49,70 +68,133 @@ jobs:
         id: target_dir
         run: |
           branch=${GITHUB_REF#refs/heads/}
-          
+
           if [ "${{ needs.check_if_release.outputs.release }}" = "true" ]; then
-            echo "name=${{ needs.check_if_release.outputs.version_major }}" >> "$GITHUB_OUTPUT"
+            echo "name=${{ needs.check_if_release.outputs.version_major }}.${{ needs.check_if_release.outputs.version_minor }}" >> "$GITHUB_OUTPUT"
           elif [ "$branch" == "main" ]; then
             echo "name=snapshot" >> "$GITHUB_OUTPUT"
           else
             echo "name=ignore" >> "$GITHUB_OUTPUT"
           fi
+
+
+  javadoc:
+    runs-on: ubuntu-latest
+    needs: javadoc_target_dir
+    if: ${{ needs.javadoc_target_dir.outputs.target != 'ignore' }}
+
+    permissions:
+      pages: write
+      id-token: write
+      contents: write
+    environment:
+      name: github-pages
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - uses: ./.github/workflows/setup-gradle
       - name: Generate Documentation
-        if: ${{ steps.target_dir.outputs.name != 'ignore' }}
+        run: ./gradlew javadoc  2>&1 | tee out.log # 2>&1 -> redirect err to out
+      - name: Check for errors
         run: |
-          ./gradlew javadoc
-      - name: Deploy docs
-        if: ${{ steps.target_dir.outputs.name != 'ignore' }}
+          pattern='warning:'
+          if grep -Eq "$pattern" out.log; then
+            echo "Found warnings:"
+            grep -E "$pattern" out.log
+            exit 1
+          fi
+      - name: Push docs
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: ./lib/build/docs/javadoc
           branch: gh-pages
-          target-folder: javadocs/${{ steps.target_dir.outputs.name }}
+          target-folder: javadocs/${{ needs.javadoc_target_dir.outputs.target }}
+      - name: Deploy gh-pages
+        uses: ./.github/workflows/deploy-pages
 
   wiki:
     runs-on: ubuntu-latest
-    needs: check_if_release
-    if: ${{ needs.check_if_release.outputs.release == 'true' }}
+    needs: [ check_if_release, javadoc, javadoc_target_dir ]
+    permissions:
+      pages: write
+      id-token: write
+      contents: write
+    environment:
+      name: github-pages
     steps:
       - uses: actions/checkout@v4
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: 3.x
+          cache: pip
       - name: Build & Deploy Wiki
         run: |
           git pull
-          
-          pip install -r wiki/requirements.txt
           
           git config --global user.email 41898282+github-actions[bot]@users.noreply.github.com
           git config --global user.name github-actions[bot]
           
           cd wiki
-          mike deploy -u ${{ needs.check_if_release.outputs.version }} wiki
-          mike set-default ${{ needs.check_if_release.outputs.version }}
-      - name: Deploy Wiki
+          pip install -r requirements.txt
+          
+          # replace all JDAC_JAVADOC_VERSION with actual version
+          grep -rl 'https' ./ | xargs sed -i -e 's/MVN_ARTIFACT_JAVADOC_VERSION/${{ needs.javadoc_target_dir.outputs.target }}/g'
+          
+          if [ "${{ needs.check_if_release.outputs.release }}" = "true" ]; then 
+            mike deploy -u ${{ needs.check_if_release.outputs.version }} wiki 2>&1 | tee ../out.log # 2>&1 -> redirect err to out
+            mike set-default ${{ needs.check_if_release.outputs.version }}
+          else 
+            mike deploy snapshot 2>&1 | tee ../out.log # 2>&1 -> redirect err to out
+          fi
+      - name: Check for errors
+        run: |
+          pattern='^(WARNING|ERROR)'
+          if grep -Eq "$pattern" out.log; then
+            echo "Found warnings or errors:"
+            grep -E "$pattern" out.log
+            exit 1
+          fi
+      - name: Push Wiki
         run: |
           git pull
           git push origin gh-pages
+      - name: Deploy gh-pages
+        uses: ./.github/workflows/deploy-pages
 
   maven_central:
     runs-on: ubuntu-latest
-    needs: check_if_release
-    if: ${{ needs.check_if_release.outputs.release == 'true' }}
+    needs: [check_if_release, javadoc_target_dir]
+    if: ${{ needs.javadoc_target_dir.outputs.target != 'ignore' }}
     steps:
+      - name: Disable deployment if not snapshot/release
+        id: find_active
+        run: |
+          branch=${{ github.ref_name }}
+
+          if [ "${{ needs.check_if_release.outputs.release }}" = "true" ]; then
+            echo "active=RELEASE" >> "$GITHUB_OUTPUT"
+          elif [ "$branch" == "main" ]; then
+            echo "active=SNAPSHOT" >> "$GITHUB_OUTPUT"
+          else
+            echo "active=NEVER" >> "$GITHUB_OUTPUT"
+          fi
       - uses: actions/checkout@v4
       - uses: ./.github/workflows/setup-gradle
       - name: Build and deploy
+        if: ${{ steps.find_active.outputs.active != 'NEVER' }}
         env:
           JRELEASER_GPG_PASSPHRASE: ${{ secrets.jreleaser_gpg_pass }}
           JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.jreleaser_gpg_public_key }}
           JRELEASER_GPG_SECRET_KEY: ${{ secrets.jreleaser_gpg_secret_key }}
-          JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_SONATYPE_USERNAME: ${{ secrets.jreleaser_user }}
-          JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_SONATYPE_PASSWORD: ${{ secrets.jreleaser_password }}
+          JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_USERNAME: ${{ secrets.jreleaser_user }}
+          JRELEASER_NEXUS2_USERNAME:  ${{ secrets.jreleaser_user }}
+          JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_PASSWORD: ${{ secrets.jreleaser_password }}
+          JRELEASER_NEXUS2_PASSWORD: ${{ secrets.jreleaser_password }}
+          DEPLOY_ACTIVE: ${{ steps.find_active.outputs.active }}
         run: |
-          ./gradlew jreleaserDeploy
+          ./gradlew clean jreleaserDeploy
 
   create-gh-draft-release:
     runs-on: ubuntu-latest
