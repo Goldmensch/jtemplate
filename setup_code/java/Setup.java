@@ -42,6 +42,11 @@ void main() throws Exception {
         Files.deleteIfExists(RootPath.ROOT.resolve("repo_metadata"));
         Util.deleteDirectory(RootPath.ROOT.resolve("setup_code"));
 
+        // git: commit changes
+        new ProcessBuilder()
+                .command("git add .", "git commit -m 'Prepare repository'")
+                .start();
+
     } catch (Abort _ ) {}
 }
 
