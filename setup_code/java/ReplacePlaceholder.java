@@ -157,7 +157,7 @@ class ReplacePlaceholder {
 
         Path path = RootPath.ROOT.resolve(pathFromRoot).resolve(name);
         Files.deleteIfExists(path);
-        Files.writeString(path, s, StandardOpenOption.CREATE);
+        Files.writeString(path, replaceContent(s), StandardOpenOption.CREATE);
     }
 
     private String replaceContent(String content) {
