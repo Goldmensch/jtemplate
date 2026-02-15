@@ -43,9 +43,8 @@ void main() throws Exception {
         Util.deleteDirectory(RootPath.ROOT.resolve("setup_code"));
 
         // git: commit changes
-        new ProcessBuilder()
-                .command("git add .", "git commit -m 'Prepare repository'")
-                .start();
+        new ProcessBuilder("git", "add", ".").start();
+        new ProcessBuilder("git", "commit", "-m", "Prepare repository").start();
 
     } catch (Abort _ ) {}
 }
