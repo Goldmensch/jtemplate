@@ -104,6 +104,9 @@ class ReplacePlaceholder {
         Files.walkFileTree(root, new FileVisitor<>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+                if (dir.getFileName().equals(Path.of("setup_code"))) {
+                    return FileVisitResult.SKIP_SUBTREE;
+                }
                 return FileVisitResult.CONTINUE;
             }
 
@@ -139,7 +142,7 @@ class ReplacePlaceholder {
         });
 
 
-        Files.move(root.resolve("README.md"), Path.of("SETUP.md"));
+        Files.move(root.resolve("README.md"), root.resolve("SETUP.md"));
         copyDefault("README.md", Path.of("."));
         createLicenseFile();
 
