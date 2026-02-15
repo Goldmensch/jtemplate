@@ -15,21 +15,6 @@ import java.util.Map;
 import static java.util.Map.entry;
 
 class ReplacePlaceholder {
-    private static Path root;
-
-    static {
-        Path current = Path.of(".").toAbsolutePath();
-        while (current != null) {
-            boolean isRoot = Files.exists(current.resolve("README.md"));
-            if (isRoot) {
-                root = current;
-                break;
-            }
-
-            current = current.getParent();
-        }
-    }
-
     private final Map<String, String> replacements;
     private  final JSONObject license;
 
@@ -67,7 +52,12 @@ class ReplacePlaceholder {
     }
 
     private static String getRepoMeta(String key) throws IOException {
-        String meta = Files.readString(root.resolve("repo_metadata"));
+        Path metaFile = RootPath.ROOT.resolve("repo_metadata");
+        if (Files.notExists(metaFile)) {
+            throw new RuntimeException("File `repo_metadata` not found. Please wait for ci to finish and fetch repo again!");
+        }
+
+        String meta = Files.readString(metaFile);
         for (String line : meta.lines().toList()) {
             String[] split = line.split("=", 2);
             if (split[0].equals(key)) {
@@ -101,7 +91,7 @@ class ReplacePlaceholder {
 
     private void doReplace() throws IOException, InterruptedException {
 
-        Files.walkFileTree(root, new FileVisitor<>() {
+        Files.walkFileTree(RootPath.ROOT, new FileVisitor<>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
                 if (dir.getFileName().equals(Path.of("setup_code"))) {
@@ -142,7 +132,7 @@ class ReplacePlaceholder {
         });
 
 
-        Files.move(root.resolve("README.md"), root.resolve("SETUP.md"));
+        Files.move(RootPath.ROOT.resolve("README.md"), RootPath.ROOT.resolve("SETUP.md"));
         copyDefault("README.md", Path.of("."));
         createLicenseFile();
 
@@ -157,15 +147,15 @@ class ReplacePlaceholder {
             default -> content;
         };
 
-        Path path = root.resolve("LICENSE");
+        Path path = RootPath.ROOT.resolve("LICENSE");
         Files.deleteIfExists(path);
         Files.writeString(path, content, StandardOpenOption.CREATE);
     }
 
     private void copyDefault(String name, Path pathFromRoot) throws IOException {
-        String s = Files.readString(root.resolve("setup_code/defaults").resolve(name));
+        String s = Files.readString(RootPath.ROOT.resolve("setup_code/defaults").resolve(name));
 
-        Path path = root.resolve(pathFromRoot).resolve(name);
+        Path path = RootPath.ROOT.resolve(pathFromRoot).resolve(name);
         Files.deleteIfExists(path);
         Files.writeString(path, s, StandardOpenOption.CREATE);
     }

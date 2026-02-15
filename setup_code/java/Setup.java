@@ -4,12 +4,16 @@
 //JAVA 25
 //SOURCES Project.java
 //SOURCES ReplacePlaceholder.java
+//SOURCES RootPath.java
+//SOURCES Util.java
 
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
+
+import java.nio.file.Files;
 
 Terminal terminal;
 
@@ -30,6 +34,14 @@ void main() throws Exception {
         // replace placeholders
         IO.println("Replacing placeholders in repository...");
         ReplacePlaceholder.replace(project);
+
+        // remove setup files
+        IO.println("Removing setup files...");
+        Files.deleteIfExists(RootPath.ROOT.resolve(".github/workflows/create_metadata_file.yml"));
+        Files.deleteIfExists(RootPath.ROOT.resolve("setup"));
+        Files.deleteIfExists(RootPath.ROOT.resolve("repo_metadata"));
+        Util.deleteDirectory(RootPath.ROOT.resolve("setup_code"));
+
     } catch (Abort _ ) {}
 }
 
