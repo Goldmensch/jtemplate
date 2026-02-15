@@ -160,7 +160,7 @@ class ReplacePlaceholder {
     }
 
     private void copyDefault(String name, Path pathFromRoot) throws IOException {
-        String s = Files.readString(root.resolve("setup/defaults").resolve(name));
+        String s = Files.readString(root.resolve("setup_code/defaults").resolve(name));
 
         Path path = root.resolve(pathFromRoot).resolve(name);
         Files.deleteIfExists(path);
