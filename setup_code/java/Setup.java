@@ -28,6 +28,7 @@ void main() throws Exception {
         );
 
         // replace placeholders
+        IO.println("Replacing placeholders in repository...");
         ReplacePlaceholder.replace(project);
     } catch (Abort _ ) {}
 }
@@ -49,7 +50,7 @@ String read(String prompt, boolean required, String... completions) {
             .completer(new StringsCompleter(completions))
             .build();
 
-    String input = reader.readLine(prompt + ": ");
+    String input = reader.readLine(prompt + ": ").trim();
     if (input.isBlank() && required) {
         System.out.println("Input cannot be blank!");
         throw new Abort();

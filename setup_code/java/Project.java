@@ -41,14 +41,4 @@ public record Project(String name,
             "Unlicense",
             "Zlib",
     };
-
-    public Project(String name, String description, int javaVersion, String authorName, String mvnGroup, String mvnArtifact, String license) {
-        this.name = name;
-        this.description = description;
-        this.javaVersion = javaVersion;
-        this.authorName = authorName;
-        this.mvnGroup = mvnGroup;
-        this.mvnArtifact = mvnArtifact;
-        this.license = license;
-    }
 }
