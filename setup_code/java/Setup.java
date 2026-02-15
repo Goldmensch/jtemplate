@@ -54,19 +54,21 @@ void main() throws Exception {
 }
 
 void exec(String... cmd) throws IOException {
-    List<String> resolved = Arrays.stream(cmd)
-            .map(s -> switch (s) {
-                case "git" -> System.getenv("GIT_BIN");
-                default -> s;
-            })
-            .toList();
+    List<String> resolved = Arrays.asList(cmd);
+    if (System.getenv("ON_NIXOS").equals("yes")) {
+        resolved = Arrays.stream(cmd)
+                .map(s -> switch (s) {
+                    case "git" -> System.getenv("GIT_BIN");
+                    default -> s;
+                })
+                .toList();
+    }
 
     ProcessBuilder builder = new ProcessBuilder(resolved)
             .inheritIO()
             .directory(RootPath.ROOT.toFile());
     builder.environment().put("PATH", System.getenv("PATH"));
     builder.start();
-
 }
 
 int readInt(String prompt) {

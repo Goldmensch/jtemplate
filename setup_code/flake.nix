@@ -27,6 +27,7 @@
            name = "Repository Setup";
            packages = with pkgs; [git jbang jdk];
            GIT_BIN = "${pkgs.git}/bin/git";
+           ON_NIXOS = "yes";
 
            shellHook = ''
            jbang jdk install ${toString javaVersion} ${jdk}
