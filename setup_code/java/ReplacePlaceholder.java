@@ -35,8 +35,8 @@ class ReplacePlaceholder {
 
     ReplacePlaceholder(Map<String, String> replacements) throws IOException, InterruptedException {
         this.replacements = new HashMap<>(replacements);
-        this.license = loadLicense(replacements.get("LICENSE_NAME"));
-        replacements.put("LICENSE_URL", license.getString("html_url"));
+        this.license = loadLicense(this.replacements.get("LICENSE_NAME"));
+        this.replacements.put("LICENSE_URL", license.getString("html_url"));
     }
 
     public static void replace(Project project) throws IOException {
