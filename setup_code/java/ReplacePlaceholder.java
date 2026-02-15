@@ -109,19 +109,16 @@ class ReplacePlaceholder {
 
             @Override
             public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
-                Path newPath = replacePath(path);
                 if (path.getFileName().equals(Path.of("README.md"))) {
                     return FileVisitResult.CONTINUE;
                 }
 
-                Files.createDirectories(newPath.getParent());
-
-                if (!newPath.equals(path)) Files.move(path, newPath);
+                Files.createDirectories(path.getParent());
 
                 try {
-                    String content = Files.readString(newPath);
-                    Files.deleteIfExists(newPath);
-                    Files.writeString(newPath, replaceContent(content), StandardOpenOption.CREATE);
+                    String content = Files.readString(path);
+                    Files.deleteIfExists(path);
+                    Files.writeString(path, replaceContent(content), StandardOpenOption.CREATE);
                 } catch (MalformedInputException _) {
                     // ignore if no text file
                     return FileVisitResult.CONTINUE;
@@ -168,12 +165,6 @@ class ReplacePlaceholder {
         Path path = root.resolve(pathFromRoot).resolve(name);
         Files.deleteIfExists(path);
         Files.writeString(path, s, StandardOpenOption.CREATE);
-    }
-
-    private Path replacePath(Path path) {
-        String pathString = path.toString();
-        String replaced = replaceContent(pathString);
-        return Path.of(replaced);
     }
 
     private String replaceContent(String content) {
