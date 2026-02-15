@@ -1,9 +1,5 @@
-package PROJECT_LOWER_NAME.convention
+package project.convention
 
-import gradle.kotlin.dsl.accessors._91ec805279bff2b5bb12917c8cd87938.jreleaser
-import gradle.kotlin.dsl.accessors._91ec805279bff2b5bb12917c8cd87938.jreleaserDeploy
-import gradle.kotlin.dsl.accessors._91ec805279bff2b5bb12917c8cd87938.publish
-import gradle.kotlin.dsl.accessors._91ec805279bff2b5bb12917c8cd87938.publishing
 import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.invoke
 import org.jreleaser.model.Active

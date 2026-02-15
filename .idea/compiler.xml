@@ -2,12 +2,12 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="24">
-      <module name="$PROJECT.NAME$.buildSrc" target="21" />
-      <module name="$PROJECT.NAME$.buildSrc.main" target="21" />
-      <module name="$PROJECT.NAME$.buildSrc.test" target="21" />
       <module name="Fluav.buildSrc" target="21" />
       <module name="Fluav.buildSrc.main" target="21" />
       <module name="Fluav.buildSrc.test" target="21" />
+      <module name="JDA-Commands Bot.buildSrc" target="21" />
+      <module name="JDA-Commands Bot.buildSrc.main" target="21" />
+      <module name="JDA-Commands Bot.buildSrc.test" target="21" />
     </bytecodeTargetLevel>
   </component>
 </project>

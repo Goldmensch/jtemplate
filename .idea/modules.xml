@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.github/workflows/setup-repo/workflow_setup_repo.iml" filepath="$PROJECT_DIR$/.github/workflows/setup-repo/workflow_setup_repo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/setup_code/setup_code.iml" filepath="$PROJECT_DIR$/setup_code/setup_code.iml" />
+      <module fileurl="file://$PROJECT_DIR$/setup_code/workflow_setup_repo.iml" filepath="$PROJECT_DIR$/setup_code/workflow_setup_repo.iml" />
     </modules>
   </component>
 </project>

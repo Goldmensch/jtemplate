@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+cd setup_code
+direnv allow
+java/Setup.java

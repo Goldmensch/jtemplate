@@ -1,0 +1,191 @@
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.MalformedInputException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+
+import static java.util.Map.entry;
+
+class ReplacePlaceholder {
+    private static Path root;
+
+    static {
+        Path current = Path.of(".").toAbsolutePath();
+        while (current != null) {
+            boolean isRoot = Files.exists(current.resolve("README.md"));
+            if (isRoot) {
+                root = current;
+                break;
+            }
+
+            current = current.getParent();
+        }
+    }
+
+    private final Map<String, String> replacements;
+    private  final JSONObject license;
+
+    ReplacePlaceholder(Map<String, String> replacements) throws IOException, InterruptedException {
+        this.replacements = new HashMap<>(replacements);
+        this.license = loadLicense(replacements.get("LICENSE_NAME"));
+        replacements.put("LICENSE_URL", license.getString("html_url"));
+    }
+
+    public static void replace(Project project) throws IOException {
+        Map<String, String> replacements = Map.ofEntries(
+                projectName(project),
+                entry("PROJECT_LOWER_NAME", projectName(project).getValue().toLowerCase()),
+                entry("PROJECT_DESC", project.description()),
+                entry("JAVA_VERSION", String.valueOf(project.javaVersion())),
+                entry("LICENSE_NAME", project.license()),
+                entry("AUTHOR_NAME", project.authorName().isBlank()
+                        ? getRepoMeta("REPO_OWNER")
+                        : project.authorName()),
+                entry("REPO_URL", getRepoMeta("REPO_URL")),
+                entry("REPO_OWNER", getRepoMeta("REPO_OWNER")),
+                entry("MVN_GROUP", project.mvnGroup()),
+                entry("MVN_ARTIFACT", project.mvnArtifact().isBlank()
+                        ? projectName(project).getValue().toLowerCase()
+                        : project.mvnArtifact()
+                ),
+                repoWoOwnerName()
+        );
+
+        try {
+            new ReplacePlaceholder(replacements).doReplace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static String getRepoMeta(String key) throws IOException {
+        String meta = Files.readString(root.resolve("repo_metadata"));
+        for (String line : meta.lines().toList()) {
+            String[] split = line.split("=", 2);
+            if (split[0].equals(key)) {
+                return split[1];
+            }
+        }
+        throw new IllegalArgumentException("Key %s not found in repo_metadata".formatted(key));
+    }
+
+    private static Map.Entry<String, String> repoWoOwnerName() throws IOException {
+        return entry("REPO_WO_OWNER_NAME", getRepoMeta("REPO_NAME").split("/")[1]);
+    }
+
+    private static Map.Entry<String, String> projectName(Project project) throws IOException {
+        String projectName = project.name();
+        String resolved = projectName.isBlank()
+                ? repoWoOwnerName().getValue()
+                : projectName;
+        return entry("PROJECT_NAME", resolved);
+    }
+
+    private static final HttpClient client = HttpClient.newHttpClient();
+    private static JSONObject loadLicense(String name) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder(URI.create("https://api.github.com/licenses/%s".formatted(name)))
+                .header("Accept", "application/vnd.github+json")
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        return new JSONObject(response.body());
+    }
+
+    private void doReplace() throws IOException, InterruptedException {
+
+        Files.walkFileTree(root, new FileVisitor<>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+                Path newPath = replacePath(path);
+                if (path.getFileName().equals(Path.of("README.md"))) {
+                    return FileVisitResult.CONTINUE;
+                }
+
+                Files.createDirectories(newPath.getParent());
+
+                if (!newPath.equals(path)) Files.move(path, newPath);
+
+                try {
+                    String content = Files.readString(newPath);
+                    Files.deleteIfExists(newPath);
+                    Files.writeString(newPath, replaceContent(content), StandardOpenOption.CREATE);
+                } catch (MalformedInputException _) {
+                    // ignore if no text file
+                    return FileVisitResult.CONTINUE;
+                }
+
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFileFailed(Path file, IOException exc) {
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
+                return FileVisitResult.CONTINUE;
+            }
+        });
+
+
+        Files.move(root.resolve("README.md"), Path.of("SETUP.md"));
+        copyDefault("README.md", Path.of("."));
+        createLicenseFile();
+
+    }
+
+    private void createLicenseFile() throws IOException {
+        String content = license.getString("body");
+        String name = replacements.get("LICENSE_NAME");
+
+        content = switch (name) {
+            case "MIT" -> content.replace("[fullname]", replacements.get("AUTHOR_NAME")).replace("[year]", String.valueOf(LocalDate.now().getYear()));
+            default -> content;
+        };
+
+        Path path = root.resolve("LICENSE");
+        Files.deleteIfExists(path);
+        Files.writeString(path, content, StandardOpenOption.CREATE);
+    }
+
+    private void copyDefault(String name, Path pathFromRoot) throws IOException {
+        String s = Files.readString(root.resolve("setup/defaults").resolve(name));
+
+        Path path = root.resolve(pathFromRoot).resolve(name);
+        Files.deleteIfExists(path);
+        Files.writeString(path, s, StandardOpenOption.CREATE);
+    }
+
+    private Path replacePath(Path path) {
+        String pathString = path.toString();
+        String replaced = replaceContent(pathString);
+        return Path.of(replaced);
+    }
+
+    private String replaceContent(String content) {
+        String text = content;
+        for (Map.Entry<String, String> entry : replacements.entrySet()) {
+            text = text.replace(entry.getKey(), entry.getValue());
+        }
+        return text;
+    }
+
+
+}
+
+
+

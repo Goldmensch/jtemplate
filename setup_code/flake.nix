@@ -19,23 +19,17 @@
         system,
         ...
       }: let
-        javaVersion = JAVA_VERSION;
+        javaVersion = 25;
 
         jdk = pkgs."temurin-bin-${toString javaVersion}";
-        jdks = [
-            jdk
-            pkgs.temurin-bin
-        ];
-
-        gradle = pkgs.gradle_9.override {
-            javaToolchains = jdks;
-
-            java = pkgs.temurin-bin;
-        };
        in {
          devShells.default = pkgs.mkShell {
-           name = "PROJECT_NAME";
-           packages = with pkgs; [git maven] ++ jdks ++ [gradle];
+           name = "Repository Setup";
+           packages = with pkgs; [git maven jbang jdk];
+
+           shellHook = ''
+           jbang jdk install ${toString javaVersion} ${jdk}
+           '';
          };
        };
     };
