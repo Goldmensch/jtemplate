@@ -8,6 +8,7 @@ jobs:
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
+          rm repo_metadata
           touch repo_metadata
           echo "REPO_OWNER=${{ github.repository_owner }}" >> repo_metadata
           echo "REPO_URL=github.com/${{ github.repository }}" >> repo_metadata
@@ -19,4 +20,3 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: gh-pages
