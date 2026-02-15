@@ -6,6 +6,8 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
 public class Util {
+
+    // https://www.baeldung.com/java-delete-directory
     public static void deleteDirectory(Path path) throws IOException {
         Files.walkFileTree(path,
                 new SimpleFileVisitor<>() {
