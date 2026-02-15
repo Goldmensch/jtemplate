@@ -7,7 +7,7 @@ This template contains:
   - wiki support via mkdocs (gh-pages)
   - javadocs (gh-pages)
   - GitHub release creation
-  - deploy to maven central via sonatype
+  - deploy to maven central via sonatype (+ snapshots)
 - implementation of tip and tails release model (jdk)
   - tail branch creation on major bump
 
@@ -17,13 +17,21 @@ Please install following bots, before running the setup action:
 - [Settings](https://github.com/apps/settings)
 
 ## First steps
-You first have to run the workflow "setup repository" manually, you can do that in the
-actions tab of the GitHub page. This workflow requires several inputs, which will then be used
-to prepare the repository.
+If you're on nixos and use `direnv` just run: `./setup` in the root directory.
+
+If you're on nixos without `direnv`:
+1. go to the `setup_code` directory and access the flake
+2. run `./java/Setup.java`
+
+If you're not on nixos, you need `jbang` installed, then:
+1. go to the `setup_code` directory and access the flake
+2. run `./java/Setup.java`
+
+You will be prompted a couple of question to answer.
 
 After a successful run, this readme will be moved to SETUP.md and can be deleted after successfully configuring the repository.
 
-Then 
+Then
 - set the gh-pages setting to "from branch" and choose "gh-pages"
 - set the following secret keys in your repository:
   - jreleaser_gpg_pass -> the gpg key password used for publishing to maven central
@@ -79,7 +87,7 @@ Triggering a release is particular easy, you just have to make a commit to the `
 with following format:
 `Release MAJOR.MINOR.PATCH : RELEASE TITLE`
 
-It will trigger a wiki/javadoc deploy and push your artifacts to maven central via sonatype. The artifacts 
+It will trigger a wiki/javadoc deploy and push your artifacts to maven central via sonatype. The artifacts
 have to be manually "published" in the sonatype web interface after that.
 Additionally, if the major version is increased, a new tail branch called `MAJOR.MINOR.x` is created, were
 further fixes can be released for that version.
