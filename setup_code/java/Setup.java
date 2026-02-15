@@ -13,7 +13,11 @@ import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
+import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 Terminal terminal;
 
@@ -43,10 +47,26 @@ void main() throws Exception {
         Util.deleteDirectory(RootPath.ROOT.resolve("setup_code"));
 
         // git: commit changes
-        new ProcessBuilder("git", "add", ".").start();
-        new ProcessBuilder("git", "commit", "-m", "Prepare repository").start();
+        exec("git", "add", ".");
+        exec("git", "commit", "-m", "Prepare repository");
 
     } catch (Abort _ ) {}
+}
+
+void exec(String... cmd) throws IOException {
+    List<String> resolved = Arrays.stream(cmd)
+            .map(s -> switch (s) {
+                case "git" -> System.getenv("GIT_BIN");
+                default -> s;
+            })
+            .toList();
+
+    ProcessBuilder builder = new ProcessBuilder(resolved)
+            .inheritIO()
+            .directory(RootPath.ROOT.toFile());
+    builder.environment().put("PATH", System.getenv("PATH"));
+    builder.start();
+
 }
 
 int readInt(String prompt) {

@@ -25,7 +25,8 @@
        in {
          devShells.default = pkgs.mkShell {
            name = "Repository Setup";
-           packages = with pkgs; [git maven jbang jdk];
+           packages = with pkgs; [git jbang jdk];
+           GIT_BIN = "${pkgs.git}/bin/git";
 
            shellHook = ''
            jbang jdk install ${toString javaVersion} ${jdk}
