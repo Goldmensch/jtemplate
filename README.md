@@ -17,15 +17,9 @@ Please install following bots, before running the setup action:
 - [Settings](https://github.com/apps/settings)
 
 ## First steps
-If you're on nixos and use `direnv` just run: `./setup` in the root directory.
+If you're on nixos: just run `./setup` in the root directory
 
-If you're on nixos without `direnv`:
-1. go to the `setup_code` directory and access the flake
-2. run `./java/Setup.java`
-
-If you're not on nixos, you need `jbang` installed, then:
-1. go to the `setup_code` directory and access the flake
-2. run `./java/Setup.java`
+If you're not on nixos, you need `jbang` installed, then run `./setup_code/java/Setup.java`
 
 You will be prompted a couple of question to answer.
 
