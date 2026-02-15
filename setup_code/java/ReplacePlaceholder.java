@@ -109,7 +109,7 @@ class ReplacePlaceholder {
 
             @Override
             public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
-                if (path.getFileName().equals(Path.of("README.md"))) {
+                if (path.getFileName().equals(Path.of("README.md")) || Files.isDirectory(path)) {
                     return FileVisitResult.CONTINUE;
                 }
 
