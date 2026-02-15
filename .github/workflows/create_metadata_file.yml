@@ -2,6 +2,7 @@ on: push
 jobs:
   create_file:
     runs-on: ubuntu-latest
+    if: ${{ !(github.repository == 'Goldmensch/jtemplate' && github.ref_name == 'master')}}
     steps:
       - uses: actions/checkout@v4
       - run: |
