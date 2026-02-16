@@ -53,7 +53,7 @@ void main() throws Exception {
     } catch (Abort _ ) {}
 }
 
-void exec(String... cmd) throws IOException {
+void exec(String... cmd) throws IOException, InterruptedException {
     List<String> resolved = Arrays.asList(cmd);
     if (System.getenv("ON_NIXOS").equals("yes")) {
         resolved = Arrays.stream(cmd)
@@ -68,7 +68,7 @@ void exec(String... cmd) throws IOException {
             .inheritIO()
             .directory(RootPath.ROOT.toFile());
     builder.environment().put("PATH", System.getenv("PATH"));
-    builder.start();
+    builder.start().waitFor();
 }
 
 int readInt(String prompt) {
