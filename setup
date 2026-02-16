@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-chmod 777 ./gradlew # ensure correct permissions
+chmod 755 ./gradlew # ensure correct permissions
 git add ./gradlew >> /dev/null
 
 cd setup_code
