@@ -15,9 +15,6 @@ import org.jline.terminal.TerminalBuilder;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 Terminal terminal;
 
@@ -62,21 +59,11 @@ void main() throws Exception {
 }
 
 void exec(String... cmd) throws IOException, InterruptedException {
-    List<String> resolved = Arrays.asList(cmd);
-    if (System.getenv("ON_NIXOS").equals("yes")) {
-        resolved = Arrays.stream(cmd)
-                .map(s -> switch (s) {
-                    case "git" -> System.getenv("GIT_BIN");
-                    default -> s;
-                })
-                .toList();
-    }
-
-    ProcessBuilder builder = new ProcessBuilder(resolved)
+    new ProcessBuilder(cmd)
             .inheritIO()
-            .directory(RootPath.ROOT.toFile());
-    builder.environment().put("PATH", System.getenv("PATH"));
-    builder.start().waitFor();
+            .directory(RootPath.ROOT.toFile())
+            .start()
+            .waitFor();
 }
 
 int readInt(String prompt) {
