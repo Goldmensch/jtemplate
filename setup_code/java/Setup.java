@@ -106,7 +106,7 @@ String read(String prompt, boolean required, String... completions) {
     }
 
     if (completions.length != 0 && !List.of(completions).contains(input)) {
-        terminal.writer().println("Input doesn't match any of: " + String.join(", ", completions));
+        System.err.println("Input doesn't match any of: " + String.join(", ", completions));
         throw new Abort();
     }
 
