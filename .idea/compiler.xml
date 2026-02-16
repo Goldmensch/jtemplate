@@ -2,9 +2,9 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="JAVA_VERSION">
-      <module name="PROJECT_NAME.buildSrc" target="JAVA_VERSION" />
-      <module name="PROJECT_NAME.buildSrc.main" target="JAVA_VERSION" />
-      <module name="PROJECT_NAME.buildSrc.test" target="JAVA_VERSION" />
+      <module name="PROJECT_NAME.buildSrc" target="21" />
+      <module name="PROJECT_NAME.buildSrc.main" target="21" />
+      <module name="PROJECT_NAME.buildSrc.test" target="21" />
     </bytecodeTargetLevel>
   </component>
 </project>
