@@ -50,9 +50,9 @@ jobs:
             fi
           
             echo "fine"
-          elif [[ $branch != "main" && "${{ steps.check.outputs.release }}" = "true" ]]
+          elif [[ $branch != "master" && "${{ steps.check.outputs.release }}" = "true" ]]
           then
-            echo "should be only executed on main, tail or hotfix branch"
+            echo "should be only executed on master, tail or hotfix branch"
             exit 1
           fi
 
@@ -71,7 +71,7 @@ jobs:
 
           if [ "${{ needs.check_if_release.outputs.release }}" = "true" ]; then
             echo "name=${{ needs.check_if_release.outputs.version_major }}.${{ needs.check_if_release.outputs.version_minor }}" >> "$GITHUB_OUTPUT"
-          elif [ "$branch" == "main" ]; then
+          elif [ "$branch" == "master" ]; then
             echo "name=snapshot" >> "$GITHUB_OUTPUT"
           else
             echo "name=ignore" >> "$GITHUB_OUTPUT"
@@ -175,7 +175,7 @@ jobs:
 
           if [ "${{ needs.check_if_release.outputs.release }}" = "true" ]; then
             echo "active=RELEASE" >> "$GITHUB_OUTPUT"
-          elif [ "$branch" == "main" ]; then
+          elif [ "$branch" == "master" ]; then
             echo "active=SNAPSHOT" >> "$GITHUB_OUTPUT"
           else
             echo "active=NEVER" >> "$GITHUB_OUTPUT"
