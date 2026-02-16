@@ -134,7 +134,9 @@ class ReplacePlaceholder {
 
         Files.move(RootPath.ROOT.resolve("README.md"), RootPath.ROOT.resolve("SETUP.md"));
         copyDefault("README.md", Path.of("."));
-        copyDefault("Library.java", Path.of(replacements.get("MVN_GROUP").replace('.', '/')));
+        copyDefault("Library.java", Path.of("lib/src/main/java")
+                .resolve(Path.of(replacements.get("MVN_GROUP").replace('.', '/')))
+        );
         createLicenseFile();
 
     }
