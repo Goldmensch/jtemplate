@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
 
+chmod 777 gradlew # ensure correct permissions
 cd setup_code
 nix develop -c jbang java/Setup.java
