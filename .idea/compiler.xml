@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="24">
-      <module name="Fluav.buildSrc" target="21" />
-      <module name="Fluav.buildSrc.main" target="21" />
-      <module name="Fluav.buildSrc.test" target="21" />
-      <module name="JDA-Commands Bot.buildSrc" target="21" />
-      <module name="JDA-Commands Bot.buildSrc.main" target="21" />
-      <module name="JDA-Commands Bot.buildSrc.test" target="21" />
+    <bytecodeTargetLevel target="JAVA_VERSION">
+      <module name="PROJECT_NAME.buildSrc" target="JAVA_VERSION" />
+      <module name="PROJECT_NAME.buildSrc.main" target="JAVA_VERSION" />
+      <module name="PROJECT_NAME.buildSrc.test" target="JAVA_VERSION" />
     </bytecodeTargetLevel>
   </component>
 </project>
