@@ -17,6 +17,8 @@ Please install following bots, before running the setup action:
 - [Settings](https://github.com/apps/settings)
 
 ## First steps
+Open the repository locally.
+
 If you're on nixos: just run `./setup` in the root directory
 
 If you're not on nixos, you need `jbang` installed, then run `./setup_code/java/Setup.java`
