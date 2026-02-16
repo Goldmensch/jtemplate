@@ -15,6 +15,11 @@ import org.jline.terminal.TerminalBuilder;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.IntStream;
 
 Terminal terminal;
 
@@ -25,7 +30,7 @@ void main() throws Exception {
         Project project = new Project(
                 read("Project name (default repository name)", false),
                 read("Project description", true),
-                readInt("Used Java version"),
+                readInt("Used Java version", 8, 25),
                 read("Project author name (default repository owner)", false),
                 read("Maven group", true),
                 read("Maven artifact (default repository name)", false),
@@ -75,8 +80,10 @@ void exec(String... cmd) throws IOException, InterruptedException {
             .waitFor();
 }
 
-int readInt(String prompt) {
-    String read = read(prompt, true);
+int readInt(String prompt, int from, int to) {
+    String[] allowed = IntStream.range(from, to + 1).mapToObj(String::valueOf).toArray(String[]::new);
+
+    String read = read(prompt, true, allowed);
 
     try {
         return Integer.parseUnsignedInt(read);
@@ -94,9 +101,15 @@ String read(String prompt, boolean required, String... completions) {
 
     String input = reader.readLine(prompt + ": ").trim();
     if (input.isBlank() && required) {
-        System.out.println("Input cannot be blank!");
+        System.err.println("Input cannot be blank!");
         throw new Abort();
     }
+
+    if (completions.length != 0 && !List.of(completions).contains(input)) {
+        terminal.writer().println("Input doesn't match any of: " + String.join(", ", completions));
+        throw new Abort();
+    }
+
     return input;
 }
 
