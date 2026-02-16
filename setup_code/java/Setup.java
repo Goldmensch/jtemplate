@@ -50,12 +50,21 @@ void main() throws Exception {
         // git: create gh-pages
         exec("git", "switch", "--orphan", "gh-pages");
         exec("git", "commit", "--allow-empty", "-m", "Prepare Github Pages branch");
-        exec("git", "push");
+        pushQuestion("gh-pages");
+
 
         // git: switch back to master
         exec("git", "switch", "master");
+        pushQuestion("master");
 
     } catch (Abort _ ) {}
+}
+
+void pushQuestion(String branch) throws IOException, InterruptedException {
+    String answer = read("Push changes to %s? [yes/no]".formatted(branch), true, "yes", "no");
+    if (answer.startsWith("y")) {
+        exec("git", "push");
+    }
 }
 
 void exec(String... cmd) throws IOException, InterruptedException {
