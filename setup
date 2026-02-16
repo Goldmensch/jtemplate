@@ -2,8 +2,6 @@
 
 chmod 777 ./gradlew # ensure correct permissions
 git add ./gradlew >> /dev/null
-git commit -m "Update gradlew permissions" >> /dev/null
-
 
 cd setup_code
 nix develop -c jbang java/Setup.java
