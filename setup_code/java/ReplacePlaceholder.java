@@ -110,8 +110,7 @@ class ReplacePlaceholder {
 
                 try {
                     String content = Files.readString(path);
-                    Files.deleteIfExists(path);
-                    Files.writeString(path, replaceContent(content), StandardOpenOption.CREATE);
+                    Files.writeString(path, replaceContent(content));
                 } catch (MalformedInputException _) {
                     // ignore if no text file
                     return FileVisitResult.CONTINUE;
