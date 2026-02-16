@@ -160,6 +160,7 @@ class ReplacePlaceholder {
 
         Path path = RootPath.ROOT.resolve(pathFromRoot).resolve(name);
         Files.deleteIfExists(path);
+        Files.createDirectories(path.getParent());
         Files.writeString(path, replaceContent(s), StandardOpenOption.CREATE);
     }
 
