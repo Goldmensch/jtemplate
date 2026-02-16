@@ -50,6 +50,14 @@ void main() throws Exception {
         exec("git", "add", ".");
         exec("git", "commit", "-m", "Prepare repository");
 
+        // git: create gh-pages
+        exec("git", "switch --orphan", "gh-pages");
+        exec("git", "commit", "--allow-empty", "-m", "Prepare Github Pages branch");
+        exec("git", "push");
+
+        // git: switch back to master
+        exec("git", "switch", "master");
+
     } catch (Abort _ ) {}
 }
 
