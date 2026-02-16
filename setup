@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-chmod 777 gradlew # ensure correct permissions
-git add gradlew >> /dev/null
+chmod 777 ./gradlew # ensure correct permissions
+git add ./gradlew >> /dev/null
 git commit -m "Update gradlew permissions" >> /dev/null
 
 
