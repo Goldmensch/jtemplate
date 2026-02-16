@@ -1,7 +1,7 @@
 package MVN_GROUP;
 
 /// My very cool library!
-class Library {
+public class Library {
 
     /// @return the greetings
     public String hello() {
