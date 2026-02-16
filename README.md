@@ -28,7 +28,7 @@ You will be prompted a couple of question to answer.
 After a successful run, this readme will be moved to SETUP.md and can be deleted after successfully configuring the repository.
 
 Then
-- set the gh-pages setting to "from branch" and choose "gh-pages"
+- set the gh-pages setting to "GitHub Actions"
 - set the following secret keys in your repository:
   - jreleaser_gpg_pass -> the gpg key password used for publishing to maven central
   - jreleaser_gpg_public_key -> the gpg public key used for publishing to maven central
